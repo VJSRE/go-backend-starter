@@ -29,7 +29,7 @@ func CreateItem(itemRequest models.ItemRequest) models.Item {
 		ID:        uuid.New().String(),
 		Name:      itemRequest.Name,
 		Price:     itemRequest.Price,
-		Quality:   itemRequest.Quality,
+		Quantity:  itemRequest.Quantity,
 		CreatedAt: time.Now(),
 	}
 
@@ -44,7 +44,7 @@ func UpdateItem(itemRequest models.ItemRequest, id string) (models.Item, error) 
 		if item.ID == id {
 			item.Name = itemRequest.Name
 			item.Price = itemRequest.Price
-			item.Quality = itemRequest.Quality
+			item.Quantity = itemRequest.Quantity
 			item.UpdatedAt = time.Now()
 
 			storage[index] = item
