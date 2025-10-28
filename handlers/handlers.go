@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/VJSRE/go-backend-starter/models"
 	"github.com/VJSRE/go-backend-starter/services"
+	"github.com/VJSRE/go-backend-starter/utils"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
 )
@@ -38,6 +39,15 @@ func GetItemById(c *fiber.Ctx) error {
 
 func CreateItem(c *fiber.Ctx) error {
 
+	isValid, err := utils.CheckToken(c)
+
+	if !isValid {
+		return c.Status(http.StatusUnauthorized).JSON(models.Response[any]{
+			Success: false,
+			Message: err.Error(),
+		})
+	}
+
 	var itemInput *models.ItemRequest = new(models.ItemRequest)
 
 	if err := c.BodyParser(itemInput); err != nil {
@@ -67,6 +77,15 @@ func CreateItem(c *fiber.Ctx) error {
 }
 
 func UpdateItem(c *fiber.Ctx) error {
+
+	isValid, err := utils.CheckToken(c)
+
+	if !isValid {
+		return c.Status(http.StatusUnauthorized).JSON(models.Response[any]{
+			Success: false,
+			Message: err.Error(),
+		})
+	}
 	var inputItem *models.ItemRequest = new(models.ItemRequest)
 	if err := c.BodyParser(&inputItem); err != nil {
 		return c.Status(http.StatusBadRequest).JSON(models.Response[any]{
@@ -99,6 +118,15 @@ func UpdateItem(c *fiber.Ctx) error {
 }
 
 func DeleteItem(c *fiber.Ctx) error {
+	isValid, err := utils.CheckToken(c)
+
+	if !isValid {
+		return c.Status(http.StatusUnauthorized).JSON(models.Response[any]{
+			Success: false,
+			Message: err.Error(),
+		})
+	}
+
 	var itemID string = c.Params("id")
 	status := services.DeleteItem(itemID)
 	if status == false {
